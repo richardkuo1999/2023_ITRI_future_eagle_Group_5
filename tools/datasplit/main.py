@@ -1,4 +1,6 @@
 import cv2
+import copy
+import json
 import shutil
 import argparse
 from pathlib import Path
@@ -7,7 +9,11 @@ from matplotlib import pyplot as plt
 from utils.general import split_data, get_bounding_boxes, write_bbox_to_txt
 
 
-
+coco_format = {
+              "categories":[],
+              "annotations": [],
+              "images": []
+              }
 
 
 def parse_args():
@@ -22,7 +28,7 @@ def parse_args():
     parser.add_argument('--get_coco_type', type=bool,
                         default=True)
     
-    parser.add_argument('--class_name', type=list,
+    parser.add_argument('--class_names', type=list,
             default=['metal', 'NGfish', 'rope', 'seafood', 'stone'])
     parser.add_argument('--proportion', type=list,
                         default=[6,1],
@@ -32,33 +38,37 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     source_path, save_path = args.source_path, args.save_path
-    class_name, proportion = args.class_name, args.proportion
+    class_names, proportion = args.class_names, args.proportion
+    train_id, val_id = -1, -1
 
-    (save_path / 'images' / 'train').mkdir(exist_ok= True,parents=True)
-    (save_path / 'labels' / 'train').mkdir(exist_ok= True,parents=True)
-    (save_path / 'images' / 'val').mkdir(exist_ok= True,parents=True)
-    (save_path / 'labels' / 'val').mkdir(exist_ok= True,parents=True)
+    if args.get_coco_type:
+        train_coco = copy.deepcopy(coco_format)
+        for i, name in enumerate(class_names):
+           categories = {"id": i, "name": name, "supercategory": "mark"}
+           train_coco['categories'].append(categories)
+        val_coco = copy.deepcopy(train_coco)
+
+    for target in ['train', 'val']:
+      (save_path / 'images' / target).mkdir(exist_ok= True,parents=True)
+      (save_path / 'labels' / target).mkdir(exist_ok= True,parents=True)
 
     flag = False if input("Folders by Category[y/n]:") == 'n' else True
 
     with open(str(save_path / 'labels' / 'train' / 'classes.txt'),"a") as f:
-        for name in class_name:
+        for name in class_names:
           f.write(f'{name}\n')
     shutil.copy(str(save_path / 'labels' / 'train' / 'classes.txt'),
                   str(save_path / 'labels' / 'val' / 'classes.txt'))
 
     for dataclass in source_path.iterdir():
         class_id = None
-        if dataclass.name in class_name:
-          class_id = class_name.index(dataclass.name)
+        if dataclass.name in class_names:
+          class_id = class_names.index(dataclass.name)
         if flag:
-          (save_path / 'images' / 'train' / dataclass.name).mkdir(exist_ok= True,parents=True)
-          (save_path / 'labels' / 'train' / dataclass.name).mkdir(exist_ok= True,parents=True)
-          (save_path / 'images' / 'val' / dataclass.name).mkdir(exist_ok= True,parents=True)
-          (save_path / 'labels' / 'val' / dataclass.name).mkdir(exist_ok= True,parents=True)
+          for target in ['train', 'val']:
+            (save_path / 'images' / target / dataclass.name).mkdir(exist_ok= True,parents=True)
+            (save_path / 'labels' / target / dataclass.name).mkdir(exist_ok= True,parents=True)
           
-
-
         
         # rename the label file
         for original in (dataclass/'label').glob('*.bmp'):
@@ -84,11 +94,33 @@ if __name__ == "__main__":
                 # # get bbox
                 bbox = get_bounding_boxes(img)
                 # write to .txt
-                txt_path = save_path / 'labels'  / path_type / (str(data.name)+'.txt')
+                txt_path = save_path / 'labels'  / path_type / (str(data.stem)+'.txt')
                 write_bbox_to_txt(img, str(txt_path), bbox, class_id, False)
 
-            # '''get_coco_type'''
-            # if args.get_coco_type:
-
-
+            '''get_coco_type'''
+            if args.get_coco_type:
+                img = cv2.imread(str(label_path))
+                h, w = img.shape[:2]
+                coco_append = None
+                if str(move_to) == 'train':
+                  train_id+=1
+                  image_id = train_id
+                  coco_append = train_coco
+                else:  
+                  val_id+=1
+                  image_id = val_id
+                  coco_append = val_coco
+                images = {"file_name": data.name, "id": image_id, "width": w, "height": h}
+                coco_append['images'].append(images)
+    if args.get_coco_type:
+      coco_output = save_path / 'labels' / 'train' / 'output.json'
+      with open(coco_output, 'w') as f:
+          json.dump(train_coco, f)
+      coco_output = save_path / 'labels' / 'val' / 'output.json'
+      with open(coco_output, 'w') as f:
+          json.dump(val_coco, f)
+          
+          
+                
+                
 
