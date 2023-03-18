@@ -17,10 +17,10 @@ if __name__ == "__main__":
 
     for dataclass in source_path.iterdir():
         if flag:
-          (save_path / 'images' / 'train' / dataclass).mkdir(parents=True)
-          (save_path / 'labels' / 'train' / dataclass).mkdir(parents=True)
-          (save_path / 'images' / 'val' / dataclass).mkdir(parents=True)
-          (save_path / 'labels' / 'val' / dataclass).mkdir(parents=True)
+          (save_path / 'images' / 'train' / dataclass.name).mkdir(parents=True)
+          (save_path / 'labels' / 'train' / dataclass.name).mkdir(parents=True)
+          (save_path / 'images' / 'val' / dataclass.name).mkdir(parents=True)
+          (save_path / 'labels' / 'val' / dataclass.name).mkdir(parents=True)
         # rename the label file
         for original in (dataclass/'label').glob('*.bmp'):
           new = original.parent / ((original.stem).split('_')[0]+'.bmp')
@@ -34,9 +34,9 @@ if __name__ == "__main__":
         for data in dataclass.glob('*.bmp'):
             move_to = ('train' if data.stem in train_image_list else 'val')
             if flag: 
-                shutil.copy(data, save_path /'images' / dataclass / move_to /data.name)
+                shutil.copy(data, save_path /'images' / move_to / dataclass.name /data.name)
                 label_path =  dataclass / 'label' / data.name
-                shutil.copy(label_path, save_path / 'labels' / move_to / dataclass / data.name)
+                shutil.copy(label_path, save_path / 'labels' / move_to / dataclass.name / data.name)
             else:
                 shutil.copy(data, save_path /'images' / move_to /data.name)
                 label_path =  dataclass / 'label' / data.name
