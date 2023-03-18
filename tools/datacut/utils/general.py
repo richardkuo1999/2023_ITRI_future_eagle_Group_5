@@ -72,7 +72,7 @@ def get_bounding_boxes(img, Binary_thold):
     # 將灰度圖進行二值化處理
     _, binary = cv2.threshold(gray, Binary_thold, 255, cv2.THRESH_BINARY)
 
-    # # 顯示原圖和二值化圖
+    # 顯示原圖和二值化圖
     # cv2.imshow('Original Image', img)
     # cv2.imshow('Binary Image', binary)
 
