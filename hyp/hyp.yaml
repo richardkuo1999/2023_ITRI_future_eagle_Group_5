@@ -1,0 +1,25 @@
+lr0: 0.001  # initial learning rate (SGD=1E-2, Adam=1E-3)
+lrf: 0.2  # final OneCycleLR learning rate (lr0 * lrf)
+momentum: 0.937  # SGD momentum/Adam beta1
+
+optimizer: adam
+warmup_epochs: 3.0  # warmup epochs (fractions ok)
+seg_pos_weight: 1.0  # segmentation loss positive weights
+num_classes: 2
+
+fl_gamma: 0.0  # focal loss gamma (efficientDet default gamma=1.5)
+hsv_h: 0.015  # image HSV-Hue augmentation (fraction)
+hsv_s: 0.7  # image HSV-Saturation augmentation (fraction)
+hsv_v: 0.4  # image HSV-Value augmentation (fraction)
+# degrees: 0.0  # image rotation (+/- deg)
+translate: 0.1  # image translation (+/- fraction)
+scale_factor: 0.25  # image scale (+/- gain)
+rot_factor: 10
+color_rgb: False
+flip: True
+flipud: 0.0  # image flip up-down (probability)
+fliplr: 0.5  # image flip left-right (probability)
+shear: 0.0  # image shear (+/- deg)
+wd: 0.0005
+
+nesterov: True

@@ -1,0 +1,14 @@
+train: 
+    - ./datasets/images/train               # image
+    - ./datasets/labels/train # Object Detection
+val: 
+    - ./datasets/images/val               # image
+    - ./datasets/labels/val # object detection
+
+
+
+
+class_name: {
+            'background' : [ 0,  0,  0], ## 'background' is need
+            'obj'   : [255, 255, 255]
+            }
