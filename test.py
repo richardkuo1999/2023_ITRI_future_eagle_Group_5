@@ -12,17 +12,15 @@ from pathlib import Path
 import torch
 
 
-# from models.UNext import Model
-from models.model import Model
+
 from utils.loss import Loss
-# from models.YOLOP import Model
 from utils.datasets import create_dataloader
 from utils.torch_utils import select_device, time_synchronized
 from utils.plot import show_seg_result
 from utils.metrics import SegmentationMetric
 from utils.general import colorstr, increment_path, write_log,\
                         check_img_size, data_color, AverageMeter
-
+from models.model import build_model
 
 logger = logging.getLogger(__name__)
 
@@ -164,6 +162,8 @@ def parse_args():
     parser.add_argument('--hyp', type=str, 
                         default='hyp/hyp.yaml', 
                         help='hyperparameter path')
+    parser.add_argument('--cfg', type=str, default='UNext', 
+                                            help='model yaml path')
     parser.add_argument('--data', type=str, default='data/full.yaml', 
                                             help='dataset yaml path')
     parser.add_argument('--logDir', type=str, default='runs/test',
@@ -210,7 +210,7 @@ if __name__ == '__main__':
 
     # build up model
     print("begin to build up model...")
-    model = Model(num_classes).to(device)
+    model = build_model(args.cfg, num_classes).to(device)
 
     # loss function 
     criterion = Loss(hyp, device)

@@ -399,7 +399,7 @@ class UNext(nn.Module):
 
 
 class Model(nn.Module):
-  def __init__(self, nc, ch=3, ):
+  def __init__(self, cfg = None, nc = 2, ch=3, ):
     super(Model, self).__init__()
     self.model = UNext(nc)
 
@@ -408,18 +408,6 @@ class Model(nn.Module):
   def forward(self, x):
         return self.model(x)
 
-
-def get_optimizer(hyp, model):
-    if hyp['optimizer'] == 'sgd':
-        optimizer = torch.optim.SGD(
-            filter(lambda p: p.requires_grad, model.parameters()),lr=hyp['lr0'],
-                                momentum=hyp['momentum'], weight_decay=hyp['wd'],
-                                nesterov=hyp['nesterov'])
-    elif hyp['optimizer'] == 'adam':
-        optimizer = torch.optim.Adam(
-            filter(lambda p: p.requires_grad, model.parameters()),lr=hyp['lr0'],
-                                                betas=(hyp['momentum'], 0.999))   
-    return optimizer
 
 if __name__ == '__main__':
   model = Model(nc=5).cuda()

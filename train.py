@@ -21,8 +21,7 @@ from utils.datasets import create_dataloader
 from utils.plot import plot_BBox
 from utils.loss import Loss
 from utils.torch_utils import select_device
-from models.UNext import Model, get_optimizer
-# from models.model import Model, get_optimizer
+from models.model import build_model, get_optimizer
 from test import test
 
 logger = logging.getLogger(__name__)
@@ -56,7 +55,7 @@ def main(args, hyp, device, writer):
 
     # build up model
     print("begin to build up model...")
-    model = Model(num_classes).to(device)
+    model = build_model(args.cfg, num_classes).to(device)
 
     # loss function 
     criterion = Loss(hyp, device)
@@ -217,6 +216,8 @@ def parse_args():
     parser.add_argument('--hyp', type=str, 
                         default='hyp/hyp.yaml', 
                         help='hyperparameter path')
+    parser.add_argument('--cfg', type=str, default='Newmodel', 
+                                            help='model yaml path')
     parser.add_argument('--data', type=str, default='data/full.yaml', 
                                             help='dataset yaml path')
     parser.add_argument('--resume', type=str, default='',

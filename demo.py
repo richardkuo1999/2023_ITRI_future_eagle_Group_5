@@ -17,8 +17,7 @@ from utils.plot import show_seg_result
 from utils.torch_utils import select_device, time_synchronized
 from utils.general import colorstr, increment_path, write_log,\
                          data_color, AverageMeter
-# from models.UNext import Model
-from models.model import Model
+from models.model import build_model
 
 
 logger = logging.getLogger(__name__)
@@ -50,7 +49,7 @@ def detect(args, device, expName):
     class_color = data_color(class_name)
 
     # Load model
-    model = Model(num_classes).to(device)
+    model = build_model(args.cfg, num_classes).to(device)
     checkpoint = torch.load(args.weights, map_location= device)
     model.load_state_dict(checkpoint['state_dict'])
     model = model.to(device)
@@ -136,6 +135,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--logDir', type=str, default='runs/demo',
                             help='log directory')
+    parser.add_argument('--cfg', type=str, default='UNext', 
+                                            help='model yaml path')
     parser.add_argument('--weights', type=str, default='./weights/epoch-370.pth', 
                                                     help='model.pth path(s)')
     parser.add_argument('--data', type=str, default='data/full.yaml', 
