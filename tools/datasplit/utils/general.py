@@ -29,7 +29,6 @@ def get_bounding_boxes(img):
         # TODO not the best way
         if w*h > 2500:
             boxes.append([x, y, x+w, y+h])
-        boxes.append([x, y, x+w, y+h])
     return np.array(boxes)
 
 
