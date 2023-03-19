@@ -10,8 +10,8 @@ def plot_BBox(img, tag, boxes):
     # 顯示圖片
     for x1, y1, x2, y2 in boxes:
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
+    img = cv2.resize(img, (256, 256), interpolation=cv2.INTER_AREA)
     cv2.imshow(f'{tag}:{len(boxes)}', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    return img
 
