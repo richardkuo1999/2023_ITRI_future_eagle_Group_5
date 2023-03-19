@@ -10,6 +10,14 @@ python test.py --weights weights/last.pth
 
 python demo.py --source inference/images --weights weights/last.pth
 
+## dataset 
+在/data中的full.yaml中更改圖片及GT路徑及類別，
+也可以新增其他yaml檔案<br>
+在 train.py test.py demo.py中更改你的yaml路徑
+```python
+parser.add_argument('--data', type=str, default='data/full.yaml', 
+                                            help='dataset yaml path')
+```
 ---------------
 ## TOOL
 ### Tensorboard
