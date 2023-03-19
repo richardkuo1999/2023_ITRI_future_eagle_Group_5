@@ -17,7 +17,7 @@ def build_model(cfg, nc, anchors=None, ch=3,):
         elif cfg == 'Newmodel':
           from models.Newmodel import Model
         else:
-            raise Exception(f'mmodel {cfg} not exist')
+            raise Exception(f'model {cfg} not exist')
            
     return Model(cfg, nc, anchors)
 
