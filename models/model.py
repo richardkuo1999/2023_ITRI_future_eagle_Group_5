@@ -12,6 +12,8 @@ def build_model(cfg, nc, anchors=None, ch=3,):
     elif Path('models', cfg+'.py').exists:
         if cfg == 'UNext':
           from models.UNext import Model
+        elif cfg == 'Unet':
+          from models.UNext import Model
         elif cfg == 'Newmodel':
           from models.Newmodel import Model
         else:
