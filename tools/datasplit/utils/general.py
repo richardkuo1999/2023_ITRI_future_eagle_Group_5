@@ -2,7 +2,6 @@ import cv2
 import random
 import numpy as np
 
-from utils.plot import plot_BBox
 
 def split_data(dataclass, Proportion):
     image_list = [p.stem for p in (dataclass).glob('*.bmp')]
@@ -27,8 +26,6 @@ def get_bounding_boxes(img):
     boxes = []
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)
-        # TODO not the best way
-        # if((x > 0 or y > 0) and (w < 500 and h < 500)):
         boxes.append([x, y, x+w, y+h])
     return np.array(boxes)
 
@@ -47,13 +44,10 @@ def convert(size, box):
     return (x,y,w,h)
 
 
-def write_bbox_to_txt(img, output_path, boxes, classes, show_image=False):
-    if show_image:
-      plot_BBox(img, output_path.split('/')[-1], boxes)
+def write_bbox_to_txt(img, output_path, boxes, classes):
     H, W = img.shape[:2]
     with open(output_path,"w") as f:
         for box in boxes:
             x, y, w, h = convert((W,H), box)
             f.write(f'{classes} {x} {y} {w} {h}\n')
-
 

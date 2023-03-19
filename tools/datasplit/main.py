@@ -7,7 +7,7 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 
 from utils.general import split_data, get_bounding_boxes, write_bbox_to_txt
-
+from utils.plot import plot_BBox
 
 coco_format = {
               "categories":[],
@@ -27,6 +27,9 @@ def parse_args():
                         default=True)
     parser.add_argument('--get_coco_type', type=bool,
                         default=True)
+    parser.add_argument('--debug', type=bool,
+                        default=False,
+                        help='show image')
     
     parser.add_argument('--class_names', type=list,
             default=['metal', 'NGfish', 'rope', 'seafood', 'stone'])
@@ -87,19 +90,23 @@ if __name__ == "__main__":
             label_path =  dataclass / 'label' / data.name
             shutil.copy(label_path, save_path / 'labels' / path_type / data.name)
 
-
+            if args.get_yolo_typ or args.get_coco_type:
+                img = cv2.imread(str(label_path))
+               
             '''get_yolo_type'''
             if args.get_yolo_type:
-                img = cv2.imread(str(label_path))
                 # # get bbox
-                bbox = get_bounding_boxes(img)
+                boxes = get_bounding_boxes(img)
+                if args.debug:
+                  plot_BBox(img.copy(), f'{data.stem} origin box', boxes)
+
                 # write to .txt
                 txt_path = save_path / 'labels'  / path_type / (str(data.stem)+'.txt')
-                write_bbox_to_txt(img, str(txt_path), bbox, class_id, False)
+                write_bbox_to_txt(img, str(txt_path), boxes, class_id)
+
 
             '''get_coco_type'''
             if args.get_coco_type:
-                img = cv2.imread(str(label_path))
                 h, w = img.shape[:2]
                 coco_append = None
                 if str(move_to) == 'train':
