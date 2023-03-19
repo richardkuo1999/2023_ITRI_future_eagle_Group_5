@@ -10,6 +10,8 @@ python test.py --weights weights/last.pth
 
 python demo.py --source inference/images --weights weights/last.pth
 
+----------------------------------------------------------------
+
 ## dataset 
 在/data中的full.yaml中更改圖片及GT路徑及類別，
 也可以新增其他yaml檔案<br>
@@ -18,6 +20,26 @@ python demo.py --source inference/images --weights weights/last.pth
 parser.add_argument('--data', type=str, default='data/full.yaml', 
                                             help='dataset yaml path')
 ```
+----------------------------------------------------------------
+## environment
+```
+conda create --name myenv python=3.9
+conda activate myenv
+
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+pip install -r requirements.txt
+會報torch的錯不用理他
+
+pip install opencv-python
+pip install pyyaml
+pip install tensorboardX
+pip install tqdm
+pip install prefetch_generator
+pip install matplotlib
+pip install timm
+```
+
 ---------------
 ## TOOL
 ### Tensorboard
