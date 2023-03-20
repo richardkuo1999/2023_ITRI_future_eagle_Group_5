@@ -41,7 +41,6 @@ class Model(nn.Module):
             logger.info(f"Overriding model.yaml nc={self.yaml['nc']} with nc={nc}")
             self.yaml['nc'] = nc  # override yaml value
 
-        print(self.yaml['Head'])
         self.model, self.save = parse_model(deepcopy(self.yaml), ch=[ch])  # model, savelist
         # self.model.HeadOut = self.model[self.HeadOut_idx]
 
@@ -121,7 +120,7 @@ def parse_model(d, ch):
 
 
 if __name__ == "__main__":
-    cfg = 'C:/Users/user/Desktop/ITRI_engle_project/cfg/YOLOP_v7b3.yaml'
+    cfg = 'C:/Users/user/Desktop/ITRI_engle_project/cfg/YOLOv7_bT2.yaml'
     device = select_device('', batch_size=1)
 
     model = Model(cfg, 2).to(device)
