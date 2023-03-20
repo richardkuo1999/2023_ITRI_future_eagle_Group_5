@@ -216,7 +216,7 @@ def parse_args():
     parser.add_argument('--hyp', type=str, 
                         default='hyp/hyp.yaml', 
                         help='hyperparameter path')
-    parser.add_argument('--cfg', type=str, default='Unet', 
+    parser.add_argument('--cfg', type=str, default='cfg/YOLOP_v7b3.yaml', 
                                             help='model yaml path')
     parser.add_argument('--data', type=str, default='data/full.yaml', 
                                             help='dataset yaml path')
