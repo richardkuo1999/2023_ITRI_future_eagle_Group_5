@@ -68,8 +68,8 @@ class UNext(nn.Module):
         self.linear_c3 = MLP(input_dim=512, embed_dim=1024)
         self.linear_c2 = MLP(input_dim=256, embed_dim=1024)
         self.linear_c1 = MLP(input_dim=64, embed_dim=1024)
-        self.linear_c = MLP(input_dim=4096, embed_dim=2048)
-        self.linear_conv1 = Conv(2048,1024,1,1)
+        self.linear_c = MLP(input_dim=1024, embed_dim=1024)
+        self.linear_conv1 = Conv(1024,1024,1,1)
 
         self.de4_conv = Conv(1024,1024,1,1)
         self.linear_c5 = MLP(input_dim=2048, embed_dim=512)
@@ -100,20 +100,20 @@ class UNext(nn.Module):
 
         n, _, h, w = c4.shape
         
-        _c4 = self.linear_c4(c4).permute(0,2,1).reshape(n, -1, c4.shape[2], c4.shape[3])
-        # _c4 = resize(_c4, size=c1.size()[2:],mode='bilinear',align_corners=False)
+        # _c4 = self.linear_c4(c4).permute(0,2,1).reshape(n, -1, c4.shape[2], c4.shape[3])
+        # # _c4 = resize(_c4, size=c1.size()[2:],mode='bilinear',align_corners=False)
 
-        _c3 = self.linear_c3(c3).permute(0,2,1).reshape(n, -1, c3.shape[2], c3.shape[3])
-        _c3 = resize(_c3, size=c4.size()[2:],mode='bilinear',align_corners=False)
+        # _c3 = self.linear_c3(c3).permute(0,2,1).reshape(n, -1, c3.shape[2], c3.shape[3])
+        # _c3 = resize(_c3, size=c4.size()[2:],mode='bilinear',align_corners=False)
 
-        _c2 = self.linear_c2(c2).permute(0,2,1).reshape(n, -1, c2.shape[2], c2.shape[3])
-        _c2 = resize(_c2, size=c4.size()[2:],mode='bilinear',align_corners=False)
+        # _c2 = self.linear_c2(c2).permute(0,2,1).reshape(n, -1, c2.shape[2], c2.shape[3])
+        # _c2 = resize(_c2, size=c4.size()[2:],mode='bilinear',align_corners=False)
 
-        _c1 = self.linear_c1(c1).permute(0,2,1).reshape(n, -1, c1.shape[2], c1.shape[3])
-        _c1 = resize(_c1, size=c4.size()[2:],mode='bilinear',align_corners=False)
+        # _c1 = self.linear_c1(c1).permute(0,2,1).reshape(n, -1, c1.shape[2], c1.shape[3])
+        # _c1 = resize(_c1, size=c4.size()[2:],mode='bilinear',align_corners=False)
 
-        _c = torch.cat([_c4, _c3, _c2, _c1], dim=1)
-        _c = self.linear_c(_c).permute(0,2,1).reshape(n, -1, _c.shape[2], _c.shape[3])
+        # _c = torch.cat([_c4, _c3, _c2, _c1], dim=1)
+        _c = self.linear_c(c4).permute(0,2,1).reshape(n, -1, c4.shape[2], c4.shape[3])
         _c = resize(_c, size=c4.size()[2:],mode='bilinear',align_corners=False)
 
         
@@ -151,7 +151,7 @@ class Model(nn.Module):
 
 
 if __name__ == '__main__':
-  model = Model(nc=[8,2,9]).cuda()
+  model = Model(nc=2).cuda()
   input = torch.ones(1,3,640,640).cuda()
   print(model)
 #   model.eval()
