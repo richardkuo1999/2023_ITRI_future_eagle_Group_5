@@ -16,14 +16,11 @@ class Loss(nn.Module):
 
         self.nc = hyp['num_classes']
 
-        # drivable area segmentation loss criteria
-        da_w = torch.Tensor([0.02,1])
+        da_w = torch.ones(self.nc)
+        da_w[0] = 0.02
 
-        # self.losses = (nn.CrossEntropyLoss(weight=da_w) if self.nc > 2 else  \
-        #         nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([hyp['seg_pos_weight']]))).to(device)
         
         self.losses = (nn.CrossEntropyLoss(weight=da_w)).to(device)
-                # nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([hyp['seg_pos_weight']]))).to(device)
         
 
 
@@ -37,10 +34,4 @@ class Loss(nn.Module):
         Returns:
             loss: loss
         """
-        daseg = self.losses
-
-        # if(self.nc == 2):
-        #     loss = daseg(predictions.view(-1), targets.view(-1))
-        # else:
-        loss = daseg(predictions, targets)
-        return loss
+        return self.losses(predictions, targets)
