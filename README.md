@@ -38,6 +38,7 @@ pip install tqdm
 pip install prefetch_generator
 pip install matplotlib
 pip install timm
+pip install fvcore
 ```
 
 ---------------
