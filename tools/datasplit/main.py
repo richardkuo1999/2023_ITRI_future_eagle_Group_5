@@ -52,8 +52,8 @@ if __name__ == "__main__":
         val_coco = copy.deepcopy(train_coco)
 
     for target in ['train', 'val']:
-      (save_path / 'images' / target).mkdir(exist_ok= True,parents=True)
-      (save_path / 'labels' / target).mkdir(exist_ok= True,parents=True)
+      (save_path / 'images' / target).mkdir(parents=True)
+      (save_path / 'labels' / target).mkdir(parents=True)
 
     flag = False if input("Folders by Category[y/n]:") == 'n' else True
 
@@ -69,8 +69,8 @@ if __name__ == "__main__":
           class_id = class_names.index(dataclass.name)
         if flag:
           for target in ['train', 'val']:
-            (save_path / 'images' / target / dataclass.name).mkdir(exist_ok= True,parents=True)
-            (save_path / 'labels' / target / dataclass.name).mkdir(exist_ok= True,parents=True)
+            (save_path / 'images' / target / dataclass.name).mkdir(parents=True)
+            (save_path / 'labels' / target / dataclass.name).mkdir(parents=True)
           
         
         # rename the label file
