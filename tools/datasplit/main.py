@@ -90,7 +90,7 @@ if __name__ == "__main__":
             label_path =  dataclass / 'label' / data.name
             shutil.copy(label_path, save_path / 'labels' / path_type / data.name)
 
-            if args.get_yolo_typ or args.get_coco_type:
+            if args.get_yolo_type or args.get_coco_type:
                 img = cv2.imread(str(label_path))
                
             '''get_yolo_type'''
