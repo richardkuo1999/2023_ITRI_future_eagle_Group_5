@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument('--class_names', type=list,
             default=['metal', 'NGfish', 'rope', 'seafood', 'stone'])
     parser.add_argument('--proportion', type=list,
-                        default=[6,1],
+                        default=[5,1],
                         help='train data : val data')
     return parser.parse_args()
 
@@ -58,14 +58,17 @@ if __name__ == "__main__":
     flag = False if input("Folders by Category[y/n]:") == 'n' else True
 
     with open(str(save_path / 'labels' / 'train' / 'classes.txt'),"a") as f:
-        for name in class_names:
-          f.write(f'{name}\n')
+        if flag:
+           f.write('Impurities')
+        else:
+          for name in class_names:
+            f.write(f'{name}\n')
     shutil.copy(str(save_path / 'labels' / 'train' / 'classes.txt'),
                   str(save_path / 'labels' / 'val' / 'classes.txt'))
 
     for dataclass in source_path.iterdir():
         class_id = 0
-        if (not flag) and dataclass.name in class_names:
+        if flag and dataclass.name in class_names:
           class_id = class_names.index(dataclass.name)
         if flag:
           for target in ['train', 'val']:
