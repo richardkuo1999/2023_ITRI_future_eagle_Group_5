@@ -64,8 +64,8 @@ if __name__ == "__main__":
                   str(save_path / 'labels' / 'val' / 'classes.txt'))
 
     for dataclass in source_path.iterdir():
-        class_id = None
-        if dataclass.name in class_names:
+        class_id = 0
+        if (not flag) and dataclass.name in class_names:
           class_id = class_names.index(dataclass.name)
         if flag:
           for target in ['train', 'val']:
