@@ -8,6 +8,7 @@ dataset/
 datasets/
 runs/
 weights/
+**/result/
 
 *.pth
 *.pt
