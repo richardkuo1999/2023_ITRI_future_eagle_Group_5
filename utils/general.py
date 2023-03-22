@@ -34,6 +34,75 @@ def write_log(results_file, msg):
     with open(results_file, 'a') as f:
         f.write(msg+'\n')  
 
+def value_to_float(x):
+    if type(x) == float or type(x) == int or not x:
+        return x
+    if 'K' == x[-1]:
+        if len(x) > 1:
+            return float(x.replace('K', '')) * 1000
+        return 1000.0
+    if 'M' == x[-1]:
+        if len(x) > 1:
+            return float(x.replace('M', '')) * 1000000
+        return 1000000.0
+    if 'G' == x[-1]:
+        return float(x.replace('G', '')) * 1000000000
+    return x
+
+def OpCounter(img, model, results_file):
+    """get macs, params, flops, parameter count
+
+    Args:
+        img (torch.Tensor): Test data
+        model (models): Test model
+        results_file (pathlib): save resuslt
+    """
+    macs, params = profile(model, inputs=(img, ))  # ,verbose=False
+
+    write_log(results_file, f"MACs: {macs*2}")
+    write_log(results_file, f"params: {params}")
+
+
+    flops = FlopCountAnalysis(model, img)
+    write_log(results_file, f"FLOPs: {flops.total()}")
+
+    # write results to csv
+    def write_csv(fileName, table):
+        parameter_data = table.split('\n')
+
+        data = {}
+        for i, index in enumerate(parameter_data[0].split('|')[1:-1], start=1):
+            data[index.strip(' ')] = [value_to_float(line.split('|')[i].strip(' ')) for line in parameter_data[2:]]
+
+        myvar = pd.DataFrame(data)
+        myvar.to_csv(str(results_file).replace("results.txt",fileName))
+
+
+    parameter_table = parameter_count_table(model)
+    write_csv("parameter.csv", parameter_table)
+    
+    flop_table = flop_count_table(flops)
+    write_csv("flop.csv", flop_table)
+
+def addText2image(image, tag, fps):
+                """add Tag and fps to image
+
+                Args:
+                    image (_type_): image
+                    tag (str): model name
+                    fps (int): fps
+
+                Returns:
+                    _type_: image
+                """
+                violet = np.zeros((80, image.shape[1], 3), np.uint8)
+                violet[:] = (255, 255, 255)
+                image = cv2.vconcat((violet, image))
+                cv2.putText(image, f'{tag},  FPS:{fps}', (30, 50),
+                            cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 3, 0)
+                return image
+
+
 def one_hot_it_v11_dice(label, label_info):
     # return semantic_map -> [H, W, class_num]
     semantic_map = []

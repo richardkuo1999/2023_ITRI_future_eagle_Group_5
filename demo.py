@@ -16,7 +16,7 @@ from utils.datasets import LoadImages
 from utils.plot import show_seg_result
 from utils.torch_utils import select_device, time_synchronized
 from utils.general import colorstr, increment_path, write_log,\
-                         data_color, AverageMeter
+                         data_color, AverageMeter, OpCounter, addText2image
 from models.model import build_model
 
 
@@ -56,6 +56,13 @@ def detect(args, device, expName):
     if half:
         model.half()  # to FP16
 
+    # calculate macs, params, flops, parameter count
+    img = np.random.rand(384, 640, 3)
+    img = transform(img).to(device)
+    img = img.half() if half else img.float()  # uint8 to fp16/32
+    if img.ndimension() == 3:
+        img = img.unsqueeze(0)
+    OpCounter(img, model, results_file)
     
     # Set Dataloader
     dataset = LoadImages(args.source, img_size=args.img_size)
@@ -105,6 +112,7 @@ def detect(args, device, expName):
 
         fps= round(1/(inf_time.val+nms_time.val))
         print(f'FPS:{fps}')
+        img_det = addText2image(img_det, expName,fps)
         if dataset.mode == 'image':
             cv2.imwrite(str(save_path),img_det)
 
@@ -153,6 +161,8 @@ if __name__ == '__main__':
     
 
     args.save_dir = increment_path(Path(args.logDir))  # increment run
-    test = ''
+    
+    test = args.cfg if args.cfg.split('.')[-1] != 'yaml' else args.cfg.split('.')[0]
+
     with torch.no_grad():
         detect(args, device, test)
