@@ -182,9 +182,9 @@ def main(args, hyp, device, writer):
 
             # validation result tensorboard
             writer.add_scalar('val_loss', loss, global_steps)
-            # writer.add_scalar('Acc', segment_result[0], global_steps)
-            # writer.add_scalar('IOU', segment_result[1], global_steps)
-            # writer.add_scalar('mIOU', segment_result[2], global_steps)
+            writer.add_scalar('Acc', segment_result[0], global_steps)
+            writer.add_scalar('IOU', segment_result[1], global_steps)
+            writer.add_scalar('mIOU', segment_result[2], global_steps)
 
         ckpt = {
             'epoch': epoch,
