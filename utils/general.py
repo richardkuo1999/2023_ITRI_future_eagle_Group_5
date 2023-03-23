@@ -5,6 +5,8 @@ import math
 import logging
 import numpy as np
 from pathlib import Path
+from thop import profile
+from fvcore.nn import FlopCountAnalysis, parameter_count_table, flop_count_table
 
 import re
 
