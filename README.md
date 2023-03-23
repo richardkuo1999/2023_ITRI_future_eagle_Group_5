@@ -39,6 +39,7 @@ pip install prefetch_generator
 pip install matplotlib
 pip install timm
 pip install fvcore
+pip install thop
 ```
 
 ---------------

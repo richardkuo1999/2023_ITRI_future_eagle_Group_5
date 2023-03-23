@@ -4,6 +4,7 @@ import time
 import math
 import logging
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from thop import profile
 from fvcore.nn import FlopCountAnalysis, parameter_count_table, flop_count_table
