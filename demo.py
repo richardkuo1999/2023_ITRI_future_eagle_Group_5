@@ -102,7 +102,7 @@ def detect(args, device, expName):
 
         da_predict = output[:, :, pad_h:(height-pad_h),pad_w:(width-pad_w)]
         da_seg_mask = torch.nn.functional.interpolate(da_predict, 
-                                        scale_factor=int(1/ratio), mode='bilinear')
+                                        scale_factor=1/ratio, mode='bilinear')
         _, da_seg_mask = torch.max(da_seg_mask, 1)
         da_seg_mask = da_seg_mask.int().squeeze().cpu().numpy()
 
