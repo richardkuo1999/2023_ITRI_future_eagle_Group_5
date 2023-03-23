@@ -40,6 +40,7 @@ pip install matplotlib
 pip install timm
 pip install fvcore
 pip install thop
+pip install pandas
 ```
 
 ---------------
