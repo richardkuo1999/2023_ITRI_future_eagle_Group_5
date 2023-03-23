@@ -143,9 +143,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--logDir', type=str, default='runs/demo',
                             help='log directory')
-    parser.add_argument('--cfg', type=str, default='UNext', 
+    parser.add_argument('--cfg', type=str, default='', 
                                             help='model yaml path')
-    parser.add_argument('--weights', type=str, default='./weights/epoch-370.pth', 
+    parser.add_argument('--weights', type=str, default='', 
                                                     help='model.pth path(s)')
     parser.add_argument('--data', type=str, default='data/full.yaml', 
                                             help='dataset yaml path')
@@ -160,9 +160,22 @@ if __name__ == '__main__':
     device = select_device(args.device)
     
 
-    args.save_dir = increment_path(Path(args.logDir))  # increment run
-    
-    test = args.cfg if args.cfg.split('.')[-1] != 'yaml' else args.cfg.split('.')[0]
+    if args.weights != '':
+        args.save_dir = increment_path(Path(args.logDir))  # increment run
+        tag = args.cfg if args.cfg.split('.')[-1] != 'yaml' else args.cfg.split('.')[0]
 
-    with torch.no_grad():
-        detect(args, device, test)
+        with torch.no_grad():
+            detect(args, device, tag)
+    else:
+        for cfg in Path('weights').glob('*/*.pth'):
+
+            args.cfg = cfg.parts[1]
+            args.weights = cfg
+            if args.cfg in ['YOLOv7_b3','YOLOv7_bT2']:
+                args.cfg += '.yaml'
+
+            tag = args.cfg if args.cfg.split('.')[-1] != 'yaml' else args.cfg.split('.')[0]
+            args.save_dir = increment_path(Path(args.logDir)/tag)  # increment run
+
+            with torch.no_grad():
+                detect(args, device, tag)
