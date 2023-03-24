@@ -102,7 +102,7 @@ def detect(args, device, expName):
 
         da_predict = output[:, :, pad_h:(height-pad_h),pad_w:(width-pad_w)]
         da_seg_mask = torch.nn.functional.interpolate(da_predict, 
-                                        scale_factor=int(1/ratio), mode='bilinear')
+                                        scale_factor=1/ratio, mode='bilinear')
         _, da_seg_mask = torch.max(da_seg_mask, 1)
         da_seg_mask = da_seg_mask.int().squeeze().cpu().numpy()
 
@@ -151,7 +151,7 @@ if __name__ == '__main__':
                                             help='dataset yaml path')
     parser.add_argument('--source', type=str, default='./inference/images', 
                                                     help='source')  
-    parser.add_argument('--img-size', type=int, default=2048, 
+    parser.add_argument('--img-size', type=int, default=1024, 
                                                     help='inference size (pixels)')
     parser.add_argument('--device', default='0', 
                                     help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -172,7 +172,7 @@ if __name__ == '__main__':
             args.cfg = cfg.parts[1]
             args.weights = cfg
             if args.cfg in ['YOLOv7_b3','YOLOv7_bT2']:
-                args.cfg += '.yaml'
+                args.cfg = f'cfg/{args.cfg}.yaml'
 
             tag = args.cfg if args.cfg.split('.')[-1] != 'yaml' else args.cfg.split('.')[0]
             args.save_dir = increment_path(Path(args.logDir)/tag)  # increment run
