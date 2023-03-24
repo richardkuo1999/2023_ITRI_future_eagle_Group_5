@@ -91,11 +91,11 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
                 for i in range(batch_size):
                     img_test = cv2.imread(paths[i])
                     seg_mask = outputs[i][:, pad_h:height-pad_h, pad_w:width-pad_w].unsqueeze(0)
-                    seg_mask = torch.nn.functional.interpolate(seg_mask, scale_factor=int(1/ratio), mode='bilinear')
+                    seg_mask = torch.nn.functional.interpolate(seg_mask, scale_factor=1/ratio, mode='bilinear')
                     _, seg_mask = torch.max(seg_mask, 1)
 
                     gt_mask = target[i][:, pad_h:height-pad_h, pad_w:width-pad_w].unsqueeze(0)
-                    gt_mask = torch.nn.functional.interpolate(gt_mask, scale_factor=int(1/ratio), mode='bilinear')
+                    gt_mask = torch.nn.functional.interpolate(gt_mask, scale_factor=1/ratio, mode='bilinear')
                     _, gt_mask = torch.max(gt_mask, 1)
 
                     seg_mask = seg_mask.int().squeeze().cpu().numpy()
