@@ -14,10 +14,10 @@ resultPath = Path('result')
 
 
 def addText(image, tag):
-    violet = np.zeros((100, image.shape[1], 3), np.uint8)
+    violet = np.zeros((80, image.shape[1], 3), np.uint8)
     violet[:] = (255, 255, 255)
     image = cv2.vconcat((violet, image))
-    cv2.putText(image, tag, (30, 80),
+    cv2.putText(image, tag, (30, 50),
                 cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 3, 0)
     return image
 
