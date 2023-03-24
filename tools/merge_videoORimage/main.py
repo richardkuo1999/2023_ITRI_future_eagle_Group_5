@@ -28,7 +28,7 @@ def merge_img(tags, expDir, dataName, add_tag):
         tag, dirPath = tag_dirPath
         SourcePath = dirPath / dataName
         image = cv2.imread(str(SourcePath))
-        if str(dirPath).split('/')[-1] =='GT':
+        if str(dirPath).split('\\')[-1] =='GT':
             image = addText(image, tag)
         if add_tag:
             image = addText(image, tag)
