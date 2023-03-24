@@ -21,13 +21,16 @@ def addText(image, tag):
                 cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 3, 0)
     return image
 
-def merge_img(tags, expDir, dataName, add_tag):
+def merge_img(tags, expDir, dataName,img_size, add_tag):
     image_v = []
     image_h = []
     for j, tag_dirPath in enumerate(zip(tags, expDir), start=1):
         tag, dirPath = tag_dirPath
         SourcePath = dirPath / dataName
         image = cv2.imread(str(SourcePath))
+        if str(dirPath).split('/')[-1] =='GT':
+            image = addText(image, tag)
+            cv2.resize(image,(img_size, img_size), interpolation=cv2.INTER_AREA)
         if add_tag:
             image = addText(image, tag)
 
@@ -118,6 +121,7 @@ if __name__ == '__main__':
     dataType = imageType + videoType
     resultPath.mkdir(exist_ok=True)
     add_tag = False
+    img_size = 1024
 
     expDir = [dir for dir in sourcesPath.iterdir()]
     tags = [str(dir).split('\\')[-1].split('(')[0] for dir in expDir]
@@ -131,4 +135,4 @@ if __name__ == '__main__':
         if(Path(dataName).suffix in videoType):
             merge_video(tags, expDir, dataName)
         elif(Path(dataName).suffix in imageType):
-            merge_img(tags, expDir, dataName, add_tag)
+            merge_img(tags, expDir, dataName, img_size, add_tag)
