@@ -2,7 +2,7 @@ import torch
 from pathlib import Path
 from fvcore.nn import parameter_count_table
 
-def build_model(cfg, nc, anchors=None, ch=3,):
+def build_model(cfg, nc, ch=3,):
     if len(cfg.split('.')) > 1:
         if(cfg.split('.')[-1] == 'yaml' and Path(cfg).exists):
            from models.YOLOP import Model
@@ -12,6 +12,8 @@ def build_model(cfg, nc, anchors=None, ch=3,):
     elif Path('models', cfg+'.py').exists:
         if cfg == 'UNext':
           from models.UNext import Model
+        elif cfg == 'testmodel':
+          from models.testmodel import Model
         elif cfg == 'Unet':
           from models.UNext import Model
         elif cfg == 'Newmodel':
@@ -19,7 +21,7 @@ def build_model(cfg, nc, anchors=None, ch=3,):
         else:
             raise Exception(f'model {cfg} not exist')
            
-    model = Model(cfg, nc, anchors)
+    model = Model(cfg, nc)
     print(parameter_count_table(model))
     return model
 
