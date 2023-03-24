@@ -76,7 +76,6 @@ def detect(args, device, expName):
     model.eval()
 
     inf_time = AverageMeter()
-    nms_time = AverageMeter()
     
     for i, (path, img, img_det, vid_cap,shapes) in enumerate(dataset):
         img = transform(img).to(device)
@@ -110,7 +109,7 @@ def detect(args, device, expName):
         img_det = show_seg_result(img_det, da_seg_mask, _, _, 
                             palette=class_color, is_demo=True)
 
-        fps= round(1/(inf_time.val+nms_time.val))
+        fps= round(1/(inf_time.val))
         print(f'FPS:{fps}')
         img_det = addText2image(img_det, expName,fps)
         if dataset.mode == 'image':
@@ -133,7 +132,7 @@ def detect(args, device, expName):
           f'Results saved to {str(args.save_dir)}\n'+\
           f'Done. ({(time.time() - t0)} s)\n'+\
           f'inf : ({inf_time.avg} s/frame)\n'+\
-          f'fps : ({(1/(inf_time.avg+nms_time.avg))} frame/s)'
+          f'fps : ({(1/(inf_time.avg))} frame/s)'
     print(msg)
     write_log(results_file, msg)
 
