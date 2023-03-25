@@ -30,7 +30,7 @@ def show_seg_result(img, result, index, epoch, save_dir=None,palette=None,is_dem
     # print(color_seg.shape)
     color_mask = np.mean(color_seg, 2)
     # FIXME　draw result
-    img[color_mask == 0] = img[color_mask == 0] * 0.3
+    # img[color_mask == 0] = img[color_mask == 0] * 0.3
     img[color_mask != 0] = img[color_mask != 0] * 0.5 + [0,125,0]
     # img[color_mask != 0] = color_seg[color_mask != 0] * 0.5
     # img[color_mask == 0] = img[color_mask == 0] * 0.2
