@@ -98,11 +98,11 @@ def addText2image(image, tag, fps):
                 Returns:
                     _type_: image
                 """
-                violet = np.zeros((80, image.shape[1], 3), np.uint8)
-                violet[:] = (255, 255, 255)
-                image = cv2.vconcat((violet, image))
-                cv2.putText(image, f'{tag},  FPS:{fps}', (30, 50),
-                            cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 3, 0)
+                # violet = np.zeros((100, image.shape[1], 3), np.uint8)
+                # violet[:] = (255, 255, 255)
+                # image = cv2.vconcat((violet, image))
+                cv2.putText(image, f'{tag},  FPS:{fps}', (30,150),
+                            cv2.FONT_HERSHEY_SIMPLEX, 5, (0, 0, 255), 6, 0)
                 return image
 
 
