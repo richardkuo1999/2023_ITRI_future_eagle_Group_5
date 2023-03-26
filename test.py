@@ -57,6 +57,8 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
     losses = AverageMeter()
 
     acc_seg = AverageMeter()
+    R_seg = AverageMeter()
+    P_seg = AverageMeter()
     IoU_seg = AverageMeter()
     mIoU_seg = AverageMeter()
 
@@ -118,8 +120,12 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
         metric.reset()
         metric.addBatch(predict.cpu(), gt.cpu())
         acc = metric.pixelAccuracy()
+        Recall = metric.meanPixelRecall()
+        Prediction = metric.meanPixelPrediction()
         IoU, mIoU = metric.IntersectionOverUnion()
 
+        R_seg.update(Recall,img.size(0))
+        P_seg.update(Prediction,img.size(0))
         acc_seg.update(acc,img.size(0))
         IoU_seg.update(IoU,img.size(0))
         mIoU_seg.update(mIoU,img.size(0))
@@ -129,7 +135,7 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
     model.float()  # for training
 
 
-    segment_result = (acc_seg.avg,IoU_seg.avg,mIoU_seg.avg)
+    segment_result = (acc_seg.avg,IoU_seg.avg,mIoU_seg.avg,R_seg.avg,P_seg.avg)
 
 
     t = T_inf.avg
@@ -145,7 +151,7 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
             msg += (pf % (class_name[i], iou)+'\n')
 
     msg += f'\n\n \
-            Segment:    Acc({segment_result[0]:.3f})    mIOU({segment_result[2]:.3f})\n\
+            Segment:    Acc({segment_result[0]:.3f})    mIOU({segment_result[2]:.3f}    Recall({segment_result[3]:.3f}    Prediction({segment_result[4]:.3f})\n\
             Time: inference({t:.4f}s/frame)'
     print(msg)
     if(logger):

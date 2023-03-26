@@ -25,6 +25,28 @@ class SegmentationMetric(object):
         Acc = np.diag(self.confusionMatrix) / (self.confusionMatrix.sum(axis=1) + 1e-12)
         return Acc[1]
 
+    def classPixelRecall(self):
+        # return each category pixel Recall 
+        # acc = (TP) / TP + FN
+        classRecall = np.diag(self.confusionMatrix) / (self.confusionMatrix.sum(axis=1) + 1e-12)
+        return classRecall
+    
+    def meanPixelRecall(self):
+        classRecall = self.classPixelRecall()
+        meanRecall = np.nanmean(classRecall)
+        return meanRecall
+    
+    def classPixelPrediction (self):
+        # return each category pixel Prediction  
+        # acc = (TP) / TP + FP
+        classPrediction  = np.diag(self.confusionMatrix) / (self.confusionMatrix.sum(axis=0) + 1e-12)
+        return classPrediction
+    
+    def meanPixelPrediction (self):
+        classPrediction  = self.classPixelPrediction()
+        meanPrediction  = np.nanmean(classPrediction)
+        return meanPrediction
+    
     def classPixelAccuracy(self):
         # return each category pixel accuracy(A more accurate way to call it precision)
         # acc = (TP) / TP + FP
