@@ -151,7 +151,7 @@ def test(epoch, args, hyp, val_loader, model, criterion, output_dir,
             msg += (pf % (class_name[i], iou)+'\n')
 
     msg += f'\n\n \
-            Segment:    Acc({segment_result[0]:.3f})    mIOU({segment_result[2]:.3f}    Recall({segment_result[3]:.3f}    Prediction({segment_result[4]:.3f})\n\
+            Segment:    Acc({segment_result[0]:.3f})    mIOU({segment_result[2]:.3f}    Recall({segment_result[3]:.3f})    Prediction({segment_result[4]:.3f})\n\
             Time: inference({t:.4f}s/frame)'
     print(msg)
     if(logger):
